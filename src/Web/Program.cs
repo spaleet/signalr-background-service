@@ -1,5 +1,6 @@
 using Application.Settings;
 using Serilog;
+using Web.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
@@ -11,9 +12,11 @@ builder.Services.AddHttpClient<IWeatherClient, WeatherClient>(opt =>
 {
     opt.BaseAddress = new Uri(builder.Configuration["WeatherSettings:BaseUrl"]);
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
+app.MapHub<WeatherHub>("/hubs/weather");
 
 app.Run();
