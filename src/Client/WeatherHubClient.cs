@@ -6,7 +6,7 @@ public class WeatherHubClient : IHostedService
 {
     private readonly ILogger<WeatherHubClient> _logger;
     private HubConnection _connection;
-    private const string HubUrl = "https://localhost:7212/hubs/weather";
+    private const string HubUrl = "https://localhost:6100/hubs/weather";
 
     public WeatherHubClient(ILogger<WeatherHubClient> logger)
     {
@@ -32,12 +32,15 @@ public class WeatherHubClient : IHostedService
         {
             try
             {
+                _logger.LogInformation("Connecting to hub ...");
+
                 await _connection.StartAsync(cancellationToken);
 
                 break;
             }
             catch
             {
+                _logger.LogInformation("Connection failed. Reconnecting ...");
                 await Task.Delay(1000, cancellationToken);
             }
         }
