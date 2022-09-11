@@ -5,6 +5,7 @@ namespace Server.Workers;
 
 public class WeatherWorker : BackgroundService
 {
+    private readonly PeriodicTimer _timer = new(TimeSpan.FromSeconds(60));
     private readonly IWeatherClient _weatherClient;
     private readonly ILogger<WeatherWorker> _logger;
     private readonly IHubContext<WeatherHub> _hub;
@@ -19,7 +20,9 @@ public class WeatherWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Worker running at: {Time}", DateTime.Now);
-        while (!stoppingToken.IsCancellationRequested)
+
+        while (await _timer.WaitForNextTickAsync(stoppingToken)
+                && !stoppingToken.IsCancellationRequested)
         {
             string city = "chicago";
 
