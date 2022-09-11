@@ -2,7 +2,7 @@
 
 namespace Web.Hubs;
 
-public class WeatherHub : Hub
+public class WeatherHub : Hub<IWeatherHub>
 {
     private readonly IWeatherClient _weatherClient;
     private readonly ILogger<WeatherHub> _logger;
@@ -21,6 +21,6 @@ public class WeatherHub : Hub
         string weatherMessage = string.Format("The temperature in {0}, {1} is currently {2} °C", city, weatherData?.SystemWeather.Country, weatherData?.Main.CelsiusCurrent);
 
         _logger.LogInformation("Sent weather data for {city} to client", city);
-        await Clients.All.SendAsync("ShowWeather", weatherMessage);
+        await Clients.All.ShowWeather(weatherMessage);
     }
 }

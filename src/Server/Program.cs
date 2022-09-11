@@ -21,4 +21,5 @@ var app = builder.Build();
 app.MapGet("/", () => "Hello World!");
 app.MapHub<WeatherHub>("/hubs/weather");
 
-app.Run();
+Log.Information("Application Starting ...");
+await app.RunAsync();

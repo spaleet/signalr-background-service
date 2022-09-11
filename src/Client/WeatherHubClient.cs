@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Application.HubInterfaces;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Web.HubClients;
 
-public class WeatherHubClient : IHostedService
+public class WeatherHubClient : IWeatherHub, IHostedService
 {
     private readonly ILogger<WeatherHubClient> _logger;
     private HubConnection _connection;
@@ -16,7 +17,7 @@ public class WeatherHubClient : IHostedService
             .WithUrl(HubUrl)
             .Build();
 
-        _connection.On<string>("ShowWeather", ShowWeather);
+        _connection.On<string>(nameof(ShowWeather), ShowWeather);
     }
 
     public Task ShowWeather(string weather)
